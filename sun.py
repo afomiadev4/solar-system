@@ -6,7 +6,7 @@ class Sun:
 
     def __init__(self):
 
-        self.radius = 0.12
+        self.radius = 25
         self.segments = 100
 
     def draw(self):

@@ -17,6 +17,10 @@ def render(dt, planets):   # 🪐 receives planets from main
     # 🌞 draw sun
     sun.draw()
 
+    # 🪐 draw orbital circles first, so planets render on top
+    for planet in planets:
+        planet.draw_orbit()
+
     # 🪐 draw planets
     for planet in planets:
         planet.update(dt)

@@ -41,6 +41,7 @@ def render(dt, planets):
         
         glPushMatrix()  
         glScalef(planet.scale, planet.scale, 1.0) 
+        glRotatef(math.degrees(planet.rotation), 0.0, 0.0, 1.0)
         
         
         glColor3f(*planet.color)

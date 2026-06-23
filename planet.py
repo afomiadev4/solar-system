@@ -23,6 +23,8 @@ class Planet:
 
         self.segments = 60
 
+        self.rotation = 0.0
+
         self.scale = 1.0
         self.moons = []
 
@@ -30,6 +32,7 @@ class Planet:
 
         
         self.angle += self.speed * dt
+        self.rotation += dt
 
         
         self.angle %= 2 * math.pi

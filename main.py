@@ -21,6 +21,7 @@ planets[1].moons.append(Moon(distance=18, size=2.5, speed=3.0, color=(0.9, 0.5, 
 planets[1].moons.append(Moon(distance=28, size=1.5, speed=-2.0, color=(0.5, 0.9, 0.9)))
 
 last_time = time.time()
+time_scale = 1.0
 
 def get_dt():
     global last_time
@@ -35,8 +36,27 @@ def framebuffer_callback(window, width, height):
 
 
 def key_callback(window, key, scancode, action, mods):
+    global time_scale
+
     if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
         glfw.set_window_should_close(window, True)
+
+    if action == glfw.PRESS:
+        if key == glfw.KEY_UP:
+            time_scale += 0.5
+            print("Speed:", time_scale)
+
+        elif key == glfw.KEY_DOWN:
+            time_scale -= 0.5
+            print("Speed:", time_scale)
+
+        elif key == glfw.KEY_R:
+            time_scale *= -1
+            print("Time reversed:", time_scale)
+
+        elif key == glfw.KEY_SPACE:
+            time_scale = 1.0
+            print("Speed reset")
 
 
 def create_window():
@@ -69,7 +89,7 @@ def main():
         dt = get_dt()
 
         
-        render(dt, planets)
+        render(dt * time_scale, planets)
 
         glfw.swap_buffers(window)
         glfw.poll_events()

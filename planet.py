@@ -36,6 +36,7 @@ class Planet:
 
         
         self.angle %= 2 * math.pi
+        self.rotation %= 2 * math.pi
 
     def get_position(self):
 

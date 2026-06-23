@@ -23,6 +23,9 @@ class Planet:
 
         self.segments = 60
 
+        self.scale = 1.0
+        self.moons = []
+
     def update(self, dt):
 
         # advance around the orbit using delta time
@@ -78,3 +81,5 @@ class Planet:
             glVertex2f(px, py)
 
         glEnd()
+
+

@@ -5,9 +5,9 @@ from renderer import initialize, render
 from camera import setup_projection
 from settings import *
 
-from planet import Planet
+from planet import Planet, Moon
 
-# 🪐 PLANETS (Member 2)
+
 planets = [
     Planet(80, 6, 2.0, (0.6, 0.6, 1.0)),
     Planet(120, 10, 1.5, (0.2, 0.8, 0.2)),
@@ -15,7 +15,11 @@ planets = [
     Planet(230, 14, 0.6, (1.0, 0.8, 0.3)),
 ]
 
-# ⏱️ time system
+planets[0].moons.append(Moon(distance=15, size=2, speed=4.0, color=(0.8, 0.8, 0.8)))
+
+planets[1].moons.append(Moon(distance=18, size=2.5, speed=3.0, color=(0.9, 0.5, 0.9)))
+planets[1].moons.append(Moon(distance=28, size=1.5, speed=-2.0, color=(0.5, 0.9, 0.9)))
+
 last_time = time.time()
 
 def get_dt():
@@ -64,7 +68,7 @@ def main():
 
         dt = get_dt()
 
-        # ✅ FIXED LINE (IMPORTANT)
+        
         render(dt, planets)
 
         glfw.swap_buffers(window)

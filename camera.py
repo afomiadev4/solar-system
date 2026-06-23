@@ -10,8 +10,8 @@ def setup_projection(width, height):
 
     aspect = width / height
 
-    # span the world in world units so planets (placed at
-    # distances of hundreds) fall inside the visible region.
+    
+    
     half_h = WORLD_HALF_HEIGHT
 
     if aspect >= 1:

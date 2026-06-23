@@ -82,4 +82,44 @@ class Planet:
 
         glEnd()
 
+class Moon:
+    def __init__(self, distance, size, speed, color=(0.7, 0.7, 0.7)):
+        # Orbit radius from its parent planet's center
+        self.distance = distance
+        
+        # Size of the moon primitive circle
+        self.size = size
+        
+        # Angular orbital speed (radians per second)
+        self.speed = speed
+        
+        # RGB tuple color
+        self.color = color
+        
+        # Internal orbital angle (radians)
+        self.angle = 0.0
+        self.segments = 30
 
+    def update(self, dt):
+        # Advance orbit position relative to the parent planet using delta time
+        self.angle += self.speed * dt
+        self.angle %= 2 * math.pi
+
+    def draw_orbit(self):
+        # Draws the moon's orbit ring relative to the planet's local center
+        glColor3f(*(c * 0.4 for c in self.color))
+        glBegin(GL_LINE_LOOP)
+        for i in range(self.segments):
+            angle = 2 * math.pi * i / self.segments
+            glVertex2f(self.distance * math.cos(angle), self.distance * math.sin(angle))
+        glEnd()
+
+    def draw(self):
+        # Draws the moon primitive body locally centered at (0, 0)
+        glColor3f(*self.color)
+        glBegin(GL_TRIANGLE_FAN)
+        glVertex2f(0, 0)
+        for i in range(self.segments + 1):
+            angle = 2 * math.pi * i / self.segments
+            glVertex2f(self.size * math.cos(angle), self.size * math.sin(angle))
+        glEnd()

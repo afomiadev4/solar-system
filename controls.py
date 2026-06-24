@@ -372,3 +372,85 @@ class UserControls:
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
         glPopMatrix()
+
+    # ── Help / manual overlay (bottom-right) ─────────────────────────────────
+
+    def draw_help(self, win_w, win_h):
+        """
+        Renders a static key-guide ("manual") panel in the bottom-right corner.
+        Call this AFTER rendering the scene each frame, before swap_buffers().
+        """
+        # The on-screen manual mirrors the console key list.
+        help_lines = [
+            ("USER GUIDE",          1.0, 0.85, 0.2),
+            ("-" * 22,              0.4, 0.4,  0.55),
+            ("UP / W      Speed up",   0.8, 0.8, 0.95),
+            ("DOWN / S    Slow down",  0.8, 0.8, 0.95),
+            ("R           Reverse",    0.8, 0.8, 0.95),
+            ("SPACE       Pause",      0.8, 0.8, 0.95),
+            ("ENTER       Reset speed", 0.8, 0.8, 0.95),
+            ("1 - 4       Select",     0.8, 0.8, 0.95),
+            ("TAB         Cycle",      0.8, 0.8, 0.95),
+            ("+ / -       Resize",     0.8, 0.8, 0.95),
+            ("0           Reset size", 0.8, 0.8, 0.95),
+            ("I / O       Zoom",       0.8, 0.8, 0.95),
+            ("ESC         Quit",       0.9, 0.5, 0.5),
+        ]
+
+        # Switch to pixel-space 2-D overlay
+        glMatrixMode(GL_PROJECTION)
+        glPushMatrix()
+        glLoadIdentity()
+        glOrtho(0, win_w, 0, win_h, -1, 1)
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix()
+        glLoadIdentity()
+
+        glDisable(GL_DEPTH_TEST)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        # ── Panel dimensions ─────────────────────────────────────────────────
+        char_scale = 2
+        char_w     = 6 * char_scale    # 5 cols + 1 gap
+        char_h     = 8 * char_scale    # 7 rows + 1 gap
+        pad        = 10
+        max_chars  = max(len(t) for t, *_ in help_lines)
+        panel_w    = pad * 2 + max_chars * char_w + 6
+        panel_h    = pad * 2 + len(help_lines) * char_h + 4
+        x0         = win_w - 12 - panel_w   # anchored to the right edge
+        y0         = 12                      # anchored to the bottom edge
+
+        # ── Background panel ─────────────────────────────────────────────────
+        glColor4f(0.02, 0.02, 0.12, 0.72)
+        glBegin(GL_QUADS)
+        glVertex2f(x0,           y0)
+        glVertex2f(x0 + panel_w, y0)
+        glVertex2f(x0 + panel_w, y0 + panel_h)
+        glVertex2f(x0,           y0 + panel_h)
+        glEnd()
+
+        # Panel border
+        glColor4f(0.3, 0.3, 0.6, 0.8)
+        glBegin(GL_LINE_LOOP)
+        glVertex2f(x0,           y0)
+        glVertex2f(x0 + panel_w, y0)
+        glVertex2f(x0 + panel_w, y0 + panel_h)
+        glVertex2f(x0,           y0 + panel_h)
+        glEnd()
+
+        # ── Draw each text line ──────────────────────────────────────────────
+        text_x  = x0 + pad
+        text_y  = y0 + panel_h - pad - char_h + 2   # top line baseline
+        for text, r, g, b in help_lines:
+            if text:
+                glColor3f(r, g, b)
+                _draw_string(text, text_x, text_y, scale=char_scale)
+            text_y -= char_h
+
+        # ── Restore matrices ────────────────────────────────────────────────
+        glDisable(GL_BLEND)
+        glMatrixMode(GL_PROJECTION)
+        glPopMatrix()
+        glMatrixMode(GL_MODELVIEW)
+        glPopMatrix()

@@ -116,6 +116,7 @@ def main():
         # Member 5 HUD overlay – drawn on top, in screen-space, no GLUT needed
         win_w, win_h = glfw.get_framebuffer_size(window)
         controls.draw_hud(win_w, win_h)
+        controls.draw_help(win_w, win_h)   # on-screen manual (bottom-right)
 
         glfw.swap_buffers(window)
         glfw.poll_events()

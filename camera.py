@@ -1,6 +1,9 @@
 from OpenGL.GL import *
 from settings import WORLD_HALF_HEIGHT
 
+# Camera zoom: <1 zooms in (smaller world view), >1 zooms out (larger view).
+zoom_factor = 1.0
+
 def setup_projection(width, height):
 
     glViewport(0, 0, width, height)
@@ -10,9 +13,9 @@ def setup_projection(width, height):
 
     aspect = width / height
 
-    
-    
-    half_h = WORLD_HALF_HEIGHT
+
+
+    half_h = WORLD_HALF_HEIGHT * zoom_factor
 
     if aspect >= 1:
 

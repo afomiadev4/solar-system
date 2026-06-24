@@ -40,6 +40,20 @@ def framebuffer_callback(window, width, height):
 def key_callback(window, key, scancode, action, mods):
     """Delegate entirely to the Member-5 controls object."""
     controls.key_callback(window, key, scancode, action, mods)
+    
+    # Track projection modifiers when keys are pressed or held down
+    if action == glfw.PRESS or action == glfw.REPEAT:
+        if key == glfw.KEY_I:  # Inward view scale
+            import camera
+            camera.zoom_factor = max(0.25, camera.zoom_factor - 0.05)
+            win_w, win_h = glfw.get_framebuffer_size(window)
+            camera.setup_projection(win_w, win_h)
+            
+        elif key == glfw.KEY_O:  # Outward view scale
+            import camera
+            camera.zoom_factor = min(3.0, camera.zoom_factor + 0.05)
+            win_w, win_h = glfw.get_framebuffer_size(window)
+            camera.setup_projection(win_w, win_h)
 
 
 # ── Window creation ─────────────────────────────────────────────────────────
@@ -69,22 +83,26 @@ def main():
     initialize()
 
     print("=" * 52)
-    print("  Hierarchical Solar System  -  Member 5 Controls")
+    print("   Hierarchical Solar System   -   Simulation View")
     print("=" * 52)
     print("  UP / W          Speed up")
     print("  DOWN / S        Slow down")
     print("  R               Reverse time")
     print("  SPACE           Pause / Resume")
     print("  ENTER           Reset speed to 1x")
-    print("  1 - 4           Select a planet (again to deselect)")
+    print("  1 - 4           Select a planet")
     print("  TAB             Cycle selected planet")
-    print("  + / =           Enlarge selected / all planet(s)")
-    print("  -               Shrink  selected / all planet(s)")
-    print("  0               Reset all planet sizes to 1.0")
+    print("  + / =           Enlarge planet size")
+    print("  -               Shrink planet size")
+    print("  0               Reset all sizes to 1.0")
+    print("  I / O           Zoom Camera In / Out")  # Added notice
     print("  ESC             Quit")
     print("=" * 52)
 
     while not glfw.window_should_close(window):
+        # Anchor point for calculation frame performance mapping
+        start_frame_time = time.time()
+        
         dt = get_dt()
 
         # Member 5 provides the scaled dt (handles pause / reverse)
@@ -98,6 +116,12 @@ def main():
 
         glfw.swap_buffers(window)
         glfw.poll_events()
+
+        # Performance Mapping Constraints: Force simulation execution limit loop to target FPS bounds
+        target_frame_duration = 1.0 / FPS
+        cycle_execution_time = time.time() - start_frame_time
+        if cycle_execution_time < target_frame_duration:
+            time.sleep(target_frame_duration - cycle_execution_time)
 
     glfw.terminate()
 

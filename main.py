@@ -38,22 +38,25 @@ def framebuffer_callback(window, width, height):
 
 
 def key_callback(window, key, scancode, action, mods):
-    """Delegate entirely to the Member-5 controls object."""
+    """Delegate entirely to the Member-5 controls object and handle viewport updates."""
+    # Keep your team's control handling intact
     controls.key_callback(window, key, scancode, action, mods)
     
-    # Track projection modifiers when keys are pressed or held down
+    # Process camera scaling adjustments on active key press or repeat events
     if action == glfw.PRESS or action == glfw.REPEAT:
-        if key == glfw.KEY_I:  # Inward view scale
+        if key == glfw.KEY_I:  # Inward perspective scaling
             import camera
             camera.zoom_factor = max(0.25, camera.zoom_factor - 0.05)
             win_w, win_h = glfw.get_framebuffer_size(window)
             camera.setup_projection(win_w, win_h)
+            print(f"Zoom level adjusted: {camera.zoom_factor:.2f}")  # Verification print
             
-        elif key == glfw.KEY_O:  # Outward view scale
+        elif key == glfw.KEY_O:  # Outward perspective scaling
             import camera
             camera.zoom_factor = min(3.0, camera.zoom_factor + 0.05)
             win_w, win_h = glfw.get_framebuffer_size(window)
             camera.setup_projection(win_w, win_h)
+            print(f"Zoom level adjusted: {camera.zoom_factor:.2f}")  # Verification print
 
 
 # ── Window creation ─────────────────────────────────────────────────────────
